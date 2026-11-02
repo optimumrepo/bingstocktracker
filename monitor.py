@@ -4,9 +4,8 @@ Bing Rewards Gift Card Restock Monitor
 Monitors Microsoft Rewards SKU pages and sends Telegram, ntfy.sh,
 and/or WhatsApp (CallMeBot) notifications when restocked.
 
-Usage:
-  Local:  python monitor.py
-  CI/CD:  Set secrets as environment variables in GitHub Actions.
+Supports authenticated requests via MS_COOKIE to see accurate
+region-specific inventory and restock banners.
 """
 
 import os
@@ -43,18 +42,29 @@ OUT_OF_STOCK_PHRASES = [
     "sold out",
 ]
 
+# Indicators that the page redirected or is asking for login
+LOGIN_INDICATORS = [
+    "sign in to earn and redeem",
+    "sign in with your microsoft account",
+    "login.live.com",
+    "join microsoft rewards",
+    "sign in to redeem",
+]
+
+# --- Microsoft Rewards Session Cookie (Optional, but recommended) ---
+MS_COOKIE = os.environ.get("MS_COOKIE", "").strip()
+
 # --- Telegram Bot API ---
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
 
 # --- ntfy.sh Push Notifications ---
-# Topic name acts as your private channel (use something unique/unguessable)
-NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")  # e.g. bing-rewards-arya-xk92m
-NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh")  # default public server
+NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "").strip()
+NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh").strip()
 
 # --- CallMeBot WhatsApp ---
-CALLMEBOT_PHONE = os.environ.get("CALLMEBOT_PHONE", "")
-CALLMEBOT_API_KEY = os.environ.get("CALLMEBOT_API_KEY", "")
+CALLMEBOT_PHONE = os.environ.get("CALLMEBOT_PHONE", "").strip()
+CALLMEBOT_API_KEY = os.environ.get("CALLMEBOT_API_KEY", "").strip()
 
 # Loop mode interval
 CHECK_INTERVAL_SECONDS = int(os.environ.get("CHECK_INTERVAL", "300"))
@@ -71,7 +81,8 @@ def log(msg: str):
     print(f"[{now}] {msg}")
 
 
-def fetch_page(url: str) -> str:
+def fetch_page(url: str) -> tuple[str, str]:
+    """Fetch the HTML content and final URL of a page."""
     ctx = ssl.create_default_context()
     headers = {
         "User-Agent": (
@@ -82,19 +93,38 @@ def fetch_page(url: str) -> str:
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
     }
+    
+    # Attach session cookie if provided by user
+    if MS_COOKIE:
+        headers["Cookie"] = MS_COOKIE
+
     req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-            return resp.read().decode("utf-8", errors="replace")
+            final_url = resp.geturl()
+            html = resp.read().decode("utf-8", errors="replace")
+            return html, final_url
     except urllib.error.HTTPError as e:
         log(f"  HTTP Error {e.code} for {url}")
-        return ""
+        return "", ""
     except Exception as e:
         log(f"  Error fetching {url}: {e}")
-        return ""
+        return "", ""
+
+
+def is_login_required(html: str, final_url: str) -> bool:
+    """Check if Microsoft redirected to login or is prompting sign in."""
+    if "login.live.com" in final_url.lower():
+        return True
+    html_lower = html.lower()
+    for ind in LOGIN_INDICATORS:
+        if ind in html_lower:
+            return True
+    return False
 
 
 def is_out_of_stock(html: str) -> bool:
+    """Check if the page contains out-of-stock indicators."""
     html_lower = html.lower()
     for phrase in OUT_OF_STOCK_PHRASES:
         if phrase in html_lower:
@@ -103,6 +133,7 @@ def is_out_of_stock(html: str) -> bool:
 
 
 def has_redeem_button(html: str) -> bool:
+    """Check if the page has an active redeem/confirm button."""
     html_lower = html.lower()
     redeem_patterns = [
         r'class="[^"]*redeem[^"]*"',
@@ -123,13 +154,23 @@ def check_item(item: dict) -> dict:
     url = item["url"]
     log(f"Checking: {name}")
 
-    html = fetch_page(url)
+    html, final_url = fetch_page(url)
     if not html:
         return {
             "name": name, "url": url, "in_stock": False,
             "status": "ERROR: Could not fetch page", "html_length": 0,
         }
 
+    # 1. Check if we got redirected to sign-in
+    if is_login_required(html, final_url):
+        log("  ⚠️ Page requires login! Add MS_COOKIE secret to GitHub to track signed-in status.")
+        return {
+            "name": name, "url": url, "in_stock": False,
+            "status": "⚠️ SIGN-IN REQUIRED (cannot verify stock without login cookie)",
+            "html_length": len(html),
+        }
+
+    # 2. Check stock indicators
     out_of_stock = is_out_of_stock(html)
     redeem_available = has_redeem_button(html)
 
@@ -140,8 +181,9 @@ def check_item(item: dict) -> dict:
         status = "🟢 IN STOCK! Redeem button detected!"
         in_stock = True
     else:
-        status = "⚠️ POSSIBLY IN STOCK (no out-of-stock message found)"
-        in_stock = True
+        # If neither out-of-stock nor redeem was detected, log for visibility
+        status = "OUT OF STOCK (restock banner or unknown state)"
+        in_stock = False
 
     log(f"  Status: {status} (page size: {len(html)} bytes)")
     return {"name": name, "url": url, "in_stock": in_stock, "status": status, "html_length": len(html)}
@@ -166,7 +208,7 @@ def send_telegram(title: str, message: str) -> bool:
 
     req = urllib.request.Request(url, data=payload, method="POST",
                                  headers={"Content-Type": "application/json"})
-    log(f"  Sending Telegram notification...")
+    log("  Sending Telegram notification...")
     try:
         ctx = ssl.create_default_context()
         with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
@@ -193,7 +235,7 @@ def send_ntfy(title: str, message: str, url: str = "") -> bool:
         "Tags": "gift,moneybag",
     }
     if url:
-        headers["Click"] = url  # tapping the notification opens this URL
+        headers["Click"] = url
         headers["Actions"] = f"view, Open Rewards Page, {url}"
 
     req = urllib.request.Request(
@@ -256,14 +298,14 @@ def send_all_notifications(item: dict):
                f"Hurry and redeem before it runs out again!")
         sent = send_telegram(f"🎁 {name} Restocked!", msg) or sent
 
-    # ntfy.sh (plain text + clickable link)
+    # ntfy.sh
     if NTFY_TOPIC:
         msg = (f"{name} is back in stock on Microsoft Rewards!\n\n"
                f"Status: {status}\n\n"
                f"Hurry and redeem before it runs out again!")
         sent = send_ntfy(f"🎁 {name} Restocked!", msg, url) or sent
 
-    # CallMeBot WhatsApp (plain text)
+    # CallMeBot WhatsApp
     if CALLMEBOT_PHONE and CALLMEBOT_API_KEY:
         msg = (f"🎁 RESTOCK ALERT!\n\n"
                f"{name} is back in stock on Microsoft Rewards!\n\n"
@@ -271,11 +313,6 @@ def send_all_notifications(item: dict):
                f"🔗 {url}\n\n"
                f"Hurry and redeem before it runs out again!")
         sent = send_whatsapp_callmebot(f"🎁 {name} Restocked!", msg) or sent
-
-    if not sent:
-        log("⚠️  No notification channel configured or all failed!")
-        log("   Set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID")
-        log("   and/or NTFY_TOPIC")
 
     return sent
 
@@ -287,6 +324,10 @@ def send_all_notifications(item: dict):
 def run_check() -> list:
     log("=" * 60)
     log("Starting restock check...")
+    if MS_COOKIE:
+        log("🔑 Running with MS_COOKIE session")
+    else:
+        log("ℹ️ Running in guest mode (no MS_COOKIE set)")
     log("=" * 60)
 
     in_stock_items = []
@@ -300,7 +341,7 @@ def run_check() -> list:
         for item in in_stock_items:
             send_all_notifications(item)
     else:
-        log("\n😴 All items are still out of stock. Will check again later.")
+        log("\n😴 No restocked items detected. Will check again later.")
 
     log("=" * 60)
     log("Check complete.\n")

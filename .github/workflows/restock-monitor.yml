@@ -21,6 +21,7 @@ jobs:
 
       - name: Run restock monitor
         env:
+          MS_COOKIE: ${{ secrets.MS_COOKIE }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
