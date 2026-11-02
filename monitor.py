@@ -4,8 +4,10 @@ Bing Rewards Gift Card Restock Monitor
 Monitors Microsoft Rewards SKU pages and sends Telegram, ntfy.sh,
 and/or WhatsApp (CallMeBot) notifications when restocked.
 
-Supports authenticated requests via MS_COOKIE to see accurate
-region-specific inventory and restock banners.
+Features:
+- Authenticated checks via MS_COOKIE to track localized stock banners
+- Automatic notification when MS_COOKIE expires (without spamming)
+- Smart state tracking to prevent duplicate alerts every 10 minutes
 """
 
 import os
@@ -42,7 +44,6 @@ OUT_OF_STOCK_PHRASES = [
     "sold out",
 ]
 
-# Indicators that the page redirected or is asking for login
 LOGIN_INDICATORS = [
     "sign in to earn and redeem",
     "sign in with your microsoft account",
@@ -51,7 +52,10 @@ LOGIN_INDICATORS = [
     "sign in to redeem",
 ]
 
-# --- Microsoft Rewards Session Cookie (Optional, but recommended) ---
+# --- State File ---
+STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "state.json")
+
+# --- Microsoft Rewards Session Cookie ---
 MS_COOKIE = os.environ.get("MS_COOKIE", "").strip()
 
 # --- Telegram Bot API ---
@@ -73,6 +77,30 @@ CHECK_INTERVAL_SECONDS = int(os.environ.get("CHECK_INTERVAL", "300"))
 IST = timezone(timedelta(hours=5, minutes=30))
 
 # ---------------------------------------------------------------------------
+# State Management
+# ---------------------------------------------------------------------------
+
+def load_state() -> dict:
+    """Load persistent state from state.json."""
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            log(f"Warning: Could not read state.json ({e}). Starting fresh.")
+    return {"cookie_expired_alerted": False, "items": {}}
+
+
+def save_state(state: dict):
+    """Save persistent state to state.json."""
+    try:
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(state, f, indent=2)
+    except Exception as e:
+        log(f"Warning: Could not save state.json: {e}")
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -82,7 +110,7 @@ def log(msg: str):
 
 
 def fetch_page(url: str) -> tuple[str, str]:
-    """Fetch the HTML content and final URL of a page."""
+    """Fetch HTML content and final resolved URL."""
     ctx = ssl.create_default_context()
     headers = {
         "User-Agent": (
@@ -94,7 +122,6 @@ def fetch_page(url: str) -> tuple[str, str]:
         "Accept-Language": "en-US,en;q=0.9",
     }
     
-    # Attach session cookie if provided by user
     if MS_COOKIE:
         headers["Cookie"] = MS_COOKIE
 
@@ -149,7 +176,11 @@ def has_redeem_button(html: str) -> bool:
     return False
 
 
-def check_item(item: dict) -> dict:
+def check_item(item: dict) -> tuple[dict, bool]:
+    """
+    Check stock of an item.
+    Returns: (result_dict, login_required_flag)
+    """
     name = item["name"]
     url = item["url"]
     log(f"Checking: {name}")
@@ -159,18 +190,17 @@ def check_item(item: dict) -> dict:
         return {
             "name": name, "url": url, "in_stock": False,
             "status": "ERROR: Could not fetch page", "html_length": 0,
-        }
+        }, False
 
-    # 1. Check if we got redirected to sign-in
+    # Check for login redirection
     if is_login_required(html, final_url):
-        log("  ⚠️ Page requires login! Add MS_COOKIE secret to GitHub to track signed-in status.")
+        log("  ⚠️ Page requires login! Microsoft redirected or prompt visible.")
         return {
             "name": name, "url": url, "in_stock": False,
-            "status": "⚠️ SIGN-IN REQUIRED (cannot verify stock without login cookie)",
+            "status": "⚠️ SIGN-IN REQUIRED",
             "html_length": len(html),
-        }
+        }, True
 
-    # 2. Check stock indicators
     out_of_stock = is_out_of_stock(html)
     redeem_available = has_redeem_button(html)
 
@@ -181,12 +211,14 @@ def check_item(item: dict) -> dict:
         status = "🟢 IN STOCK! Redeem button detected!"
         in_stock = True
     else:
-        # If neither out-of-stock nor redeem was detected, log for visibility
         status = "OUT OF STOCK (restock banner or unknown state)"
         in_stock = False
 
     log(f"  Status: {status} (page size: {len(html)} bytes)")
-    return {"name": name, "url": url, "in_stock": in_stock, "status": status, "html_length": len(html)}
+    return {
+        "name": name, "url": url, "in_stock": in_stock,
+        "status": status, "html_length": len(html),
+    }, False
 
 
 # ---------------------------------------------------------------------------
@@ -282,46 +314,69 @@ def send_whatsapp_callmebot(title: str, message: str) -> bool:
         return False
 
 
-def send_all_notifications(item: dict):
-    """Send restock alert via all configured channels."""
+def send_cookie_expired_alert():
+    """Notify the user once that their MS_COOKIE session has expired."""
+    tg_msg = (
+        "⚠️ *Microsoft Rewards Session Expired*\n\n"
+        "Your `MS_COOKIE` has expired and Microsoft is prompting to sign in.\n\n"
+        "To keep tracking gift card stock accurately, please refresh your "
+        "*MS_COOKIE* secret in your GitHub repository settings."
+    )
+    ntfy_msg = (
+        "Your MS_COOKIE session has expired. Please update MS_COOKIE in GitHub Secrets to keep monitoring."
+    )
+    wa_msg = (
+        "⚠️ Microsoft Rewards session expired! Please refresh your MS_COOKIE secret in GitHub to continue monitoring."
+    )
+
+    log("⚠️ Sending cookie expiration alert to user...")
+    if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
+        send_telegram("⚠️ Rewards Session Expired", tg_msg)
+    if NTFY_TOPIC:
+        send_ntfy("⚠️ Rewards Cookie Expired", ntfy_msg)
+    if CALLMEBOT_PHONE and CALLMEBOT_API_KEY:
+        send_whatsapp_callmebot("⚠️ Rewards Cookie Expired", wa_msg)
+
+
+def send_restock_alert(item: dict):
+    """Send restock alert when an item becomes available."""
     name = item["name"]
     url = item["url"]
     status = item["status"]
-    sent = False
 
-    # Telegram (Markdown)
+    tg_msg = (
+        f"🎁 *RESTOCK ALERT!*\n\n"
+        f"*{name}* is back in stock on Microsoft Rewards!\n\n"
+        f"Status: {status}\n"
+        f"🔗 [Redeem Now]({url})\n\n"
+        f"Hurry and redeem before it runs out again!"
+    )
+    ntfy_msg = (
+        f"{name} is back in stock on Microsoft Rewards!\n\n"
+        f"Status: {status}\n\n"
+        f"Hurry and redeem before it runs out again!"
+    )
+    wa_msg = (
+        f"🎁 RESTOCK ALERT!\n\n"
+        f"{name} is back in stock on Microsoft Rewards!\n\n"
+        f"Status: {status}\n"
+        f"🔗 {url}\n\n"
+        f"Hurry and redeem before it runs out again!"
+    )
+
     if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
-        msg = (f"🎁 *RESTOCK ALERT!*\n\n"
-               f"*{name}* is back in stock on Microsoft Rewards!\n\n"
-               f"Status: {status}\n"
-               f"🔗 [Redeem Now]({url})\n\n"
-               f"Hurry and redeem before it runs out again!")
-        sent = send_telegram(f"🎁 {name} Restocked!", msg) or sent
-
-    # ntfy.sh
+        send_telegram(f"🎁 {name} Restocked!", tg_msg)
     if NTFY_TOPIC:
-        msg = (f"{name} is back in stock on Microsoft Rewards!\n\n"
-               f"Status: {status}\n\n"
-               f"Hurry and redeem before it runs out again!")
-        sent = send_ntfy(f"🎁 {name} Restocked!", msg, url) or sent
-
-    # CallMeBot WhatsApp
+        send_ntfy(f"🎁 {name} Restocked!", ntfy_msg, url)
     if CALLMEBOT_PHONE and CALLMEBOT_API_KEY:
-        msg = (f"🎁 RESTOCK ALERT!\n\n"
-               f"{name} is back in stock on Microsoft Rewards!\n\n"
-               f"Status: {status}\n"
-               f"🔗 {url}\n\n"
-               f"Hurry and redeem before it runs out again!")
-        sent = send_whatsapp_callmebot(f"🎁 {name} Restocked!", msg) or sent
-
-    return sent
+        send_whatsapp_callmebot(f"🎁 {name} Restocked!", wa_msg)
 
 
 # ---------------------------------------------------------------------------
 # Main Logic
 # ---------------------------------------------------------------------------
 
-def run_check() -> list:
+def run_check():
     log("=" * 60)
     log("Starting restock check...")
     if MS_COOKIE:
@@ -330,22 +385,49 @@ def run_check() -> list:
         log("ℹ️ Running in guest mode (no MS_COOKIE set)")
     log("=" * 60)
 
-    in_stock_items = []
+    state = load_state()
+    items_state = state.setdefault("items", {})
+
+    any_login_failed = False
+
     for item in ITEMS:
-        result = check_item(item)
+        result, login_required = check_item(item)
+        name = item["name"]
+
+        if login_required:
+            any_login_failed = True
+
+        # Check for state transition (out of stock -> in stock)
+        item_prev = items_state.get(name, {}).get("in_stock", False)
+        
         if result["in_stock"]:
-            in_stock_items.append(result)
+            if not item_prev:
+                log(f"🎉 NEW RESTOCK DETECTED: {name}! Sending alerts...")
+                send_restock_alert(result)
+            else:
+                log(f"ℹ️ {name} is still in stock (already alerted).")
+            items_state[name] = {"in_stock": True}
+        else:
+            if item_prev:
+                log(f"ℹ️ {name} is now out of stock again.")
+            items_state[name] = {"in_stock": False}
 
-    if in_stock_items:
-        log(f"\n🎉 {len(in_stock_items)} item(s) appear to be IN STOCK!")
-        for item in in_stock_items:
-            send_all_notifications(item)
-    else:
-        log("\n😴 No restocked items detected. Will check again later.")
+    # Handle cookie expiration alerting (send once when expired)
+    if MS_COOKIE and any_login_failed:
+        if not state.get("cookie_expired_alerted", False):
+            send_cookie_expired_alert()
+            state["cookie_expired_alerted"] = True
+        else:
+            log("ℹ️ Cookie expired notification was already sent. Skipping repeat.")
+    elif MS_COOKIE and not any_login_failed:
+        # If login was successful, reset the alert flag
+        if state.get("cookie_expired_alerted", False):
+            log("✅ Cookie is valid again. Resetting expiration alert flag.")
+            state["cookie_expired_alerted"] = False
 
+    save_state(state)
     log("=" * 60)
     log("Check complete.\n")
-    return in_stock_items
 
 
 def main():
