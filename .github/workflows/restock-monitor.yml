@@ -5,6 +5,11 @@ on:
     - cron: "*/10 * * * *"
   workflow_dispatch:
 
+# Ensure only one check runs at a time (cancels outdated queued runs if runners are delayed)
+concurrency:
+  group: restock-monitor
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
