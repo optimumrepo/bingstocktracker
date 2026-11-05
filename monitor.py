@@ -7,7 +7,7 @@ and/or WhatsApp (CallMeBot) notifications when restocked.
 Features:
 - Authenticated checks via MS_COOKIE to track localized stock banners
 - Automatic notification when MS_COOKIE expires (without spamming)
-- Smart state tracking to prevent duplicate alerts every 10 minutes
+- Smart state tracking to prevent duplicate alerts
 """
 
 import os
@@ -177,10 +177,6 @@ def has_redeem_button(html: str) -> bool:
 
 
 def check_item(item: dict) -> tuple[dict, bool]:
-    """
-    Check stock of an item.
-    Returns: (result_dict, login_required_flag)
-    """
     name = item["name"]
     url = item["url"]
     log(f"Checking: {name}")
@@ -192,7 +188,6 @@ def check_item(item: dict) -> tuple[dict, bool]:
             "status": "ERROR: Could not fetch page", "html_length": 0,
         }, False
 
-    # Check for login redirection
     if is_login_required(html, final_url):
         log("  ⚠️ Page requires login! Microsoft redirected or prompt visible.")
         return {
@@ -255,16 +250,23 @@ def send_telegram(title: str, message: str) -> bool:
         return False
 
 
-def send_ntfy(title: str, message: str, url: str = "") -> bool:
-    """Send via ntfy.sh push notification."""
+def send_ntfy(title: str, message: str, url: str = "", tags: str = "gift,moneybag") -> bool:
+    """Send via ntfy.sh push notification (with clean ASCII headers)."""
     if not NTFY_TOPIC:
+        log("  ℹ️ NTFY_TOPIC not configured — skipping ntfy.")
         return False
 
     ntfy_url = f"{NTFY_SERVER}/{NTFY_TOPIC}"
+    
+    # Strip non-ASCII characters from headers to prevent Python HTTP header encode errors
+    clean_title = title.encode("ascii", "ignore").decode("ascii").strip()
+    if not clean_title:
+        clean_title = "Bing Rewards Alert"
+
     headers = {
-        "Title": title,
+        "Title": clean_title,
         "Priority": "urgent",
-        "Tags": "gift,moneybag",
+        "Tags": tags,
     }
     if url:
         headers["Click"] = url
@@ -282,12 +284,12 @@ def send_ntfy(title: str, message: str, url: str = "") -> bool:
         ctx = ssl.create_default_context()
         with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
             if resp.status == 200:
-                log("  ✅ ntfy.sh sent!")
+                log("  ✅ ntfy.sh sent successfully!")
                 return True
             log(f"  ❌ ntfy.sh response: {resp.status}")
             return False
     except Exception as e:
-        log(f"  Error sending ntfy.sh: {e}")
+        log(f"  ❌ Error sending ntfy: {e}")
         return False
 
 
@@ -333,7 +335,7 @@ def send_cookie_expired_alert():
     if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
         send_telegram("⚠️ Rewards Session Expired", tg_msg)
     if NTFY_TOPIC:
-        send_ntfy("⚠️ Rewards Cookie Expired", ntfy_msg)
+        send_ntfy("Rewards Session Expired", ntfy_msg, tags="warning,lock")
     if CALLMEBOT_PHONE and CALLMEBOT_API_KEY:
         send_whatsapp_callmebot("⚠️ Rewards Cookie Expired", wa_msg)
 
@@ -367,7 +369,7 @@ def send_restock_alert(item: dict):
     if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
         send_telegram(f"🎁 {name} Restocked!", tg_msg)
     if NTFY_TOPIC:
-        send_ntfy(f"🎁 {name} Restocked!", ntfy_msg, url)
+        send_ntfy(f"{name} Restocked!", ntfy_msg, url=url, tags="gift,moneybag")
     if CALLMEBOT_PHONE and CALLMEBOT_API_KEY:
         send_whatsapp_callmebot(f"🎁 {name} Restocked!", wa_msg)
 
