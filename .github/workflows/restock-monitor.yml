@@ -5,7 +5,6 @@ on:
     - cron: "*/10 * * * *"
   workflow_dispatch:
 
-# Ensure only one check runs at a time (cancels outdated queued runs if runners are delayed)
 concurrency:
   group: restock-monitor
   cancel-in-progress: true
@@ -27,20 +26,22 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
       - name: Run restock monitor
         env:
-          MS_COOKIE: ${{ secrets.MS_COOKIE }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
-          CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
-        run: python monitor.py --once
+        run: python monitor.py
 
-      - name: Save tracker state
+      - name: Save refreshed browser state
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state.json || true
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update monitor state [skip ci]" && git push) || true
+          git add browser_state.json state.json || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Refresh browser session [skip ci]" && git push) || true
