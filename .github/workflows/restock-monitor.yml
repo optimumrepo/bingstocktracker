@@ -20,29 +20,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Cache Playwright browser
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-chromium
-
-      - name: Install Playwright & Chromium
+      - name: Install Playwright
         run: |
           pip install playwright
-          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != "true" ]; then
-            playwright install chromium --with-deps
-          else
-            playwright install-deps chromium
-          fi
+          playwright install chromium --with-deps
 
       - name: Run restock monitor
         env:
