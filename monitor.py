@@ -1,10 +1,11 @@
 """
-Bing Rewards Gift Card Restock Monitor (Playwright Edition - Optimized)
-========================================================================
-Optimizations:
-- Parallel tab checks via asyncio.gather (checks all items simultaneously)
-- Blocks images, media, and fonts (cuts bandwidth by 80% & loads in ~1s)
-- Auto-renews Microsoft tokens and saves refreshed browser state
+Bing Rewards Gift Card Restock Monitor (Playwright Edition - Robust)
+=====================================================================
+Features:
+- Telemetry auto-stripping: Prevents browser_state.json bloat and QuotaExceededError
+- Parallel tab checks via asyncio.gather (fast concurrent loading)
+- Blocks images, media, fonts, and tracking scripts
+- Automatic token rotation persistence
 """
 
 import os
@@ -83,6 +84,23 @@ def save_monitor_state(state: dict):
             json.dump(state, f, indent=2)
     except Exception as e:
         log(f"Warning: Could not save state.json: {e}")
+
+
+def sanitize_storage_state(state: dict) -> dict:
+    """Filter out Microsoft's massive telemetry event logs from localStorage."""
+    clean_origins = []
+    for origin in state.get("origins", []):
+        clean_ls = [
+            item for item in origin.get("localStorage", [])
+            if not any(k in item.get("name", "").lower() for k in ["vnext", "telemetry", "1ds", "akey", "aria", "perf"])
+            and len(item.get("value", "")) < 1000
+        ]
+        clean_origins.append({"origin": origin.get("origin"), "localStorage": clean_ls})
+
+    return {
+        "cookies": state.get("cookies", []),
+        "origins": clean_origins
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -218,7 +236,7 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
     page = await context.new_page()
     try:
         await page.goto(url, wait_until="domcontentloaded", timeout=25000)
-        # Fast wait for dynamic scripts to settle
+        # Wait a bit for dynamic scripts to settle
         await page.wait_for_timeout(2000)
 
         final_url = page.url
@@ -258,7 +276,7 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
 
 async def run_monitor():
     log("=" * 60)
-    log("Bing Rewards Restock Monitor (Fast Parallel Edition)")
+    log("Bing Rewards Restock Monitor (Robust Edition)")
     log(f"Tracking {len(ITEMS)} items in parallel")
     log("=" * 60)
 
@@ -288,16 +306,22 @@ async def run_monitor():
             ),
         )
 
-        # ⚡ Optimization 1: Abort heavy media, fonts, and images
-        async def block_media(route):
+        # Optimization: Abort heavy media, fonts, and telemetry bloat
+        async def block_media_and_trackers(route):
+            url = route.request.url.lower()
             if route.request.resource_type in ["image", "media", "font"]:
+                await route.abort()
+            elif any(tracker in url for tracker in [
+                "telemetry", "clarity.ms", "bat.bing.com", "vortex.data.microsoft.com",
+                "browser.events.data.msn.com", "1ds.microsoft.com"
+            ]):
                 await route.abort()
             else:
                 await route.continue_()
 
-        await context.route("**/*", block_media)
+        await context.route("**/*", block_media_and_trackers)
 
-        # ⚡ Optimization 2: Check both items in parallel tabs
+        # Check all items in parallel tabs
         tasks = [check_single_item(context, item) for item in ITEMS]
         results = await asyncio.gather(*tasks)
 
@@ -320,12 +344,13 @@ async def run_monitor():
                     log(f"  ℹ️ {name} is now out of stock again.")
                 items_state[name] = {"in_stock": False}
 
-        # Save refreshed session
+        # Save refreshed session (with telemetry stripped)
         if not any_login_failed:
-            state = await context.storage_state()
+            raw_state = await context.storage_state()
+            clean_state = sanitize_storage_state(raw_state)
             with open(BROWSER_STATE_FILE, "w", encoding="utf-8") as f:
-                json.dump(state, f, indent=2)
-            log("✅ Browser state refreshed and saved.")
+                json.dump(clean_state, f, indent=2)
+            log("✅ Clean browser state refreshed and saved.")
 
         await browser.close()
 
