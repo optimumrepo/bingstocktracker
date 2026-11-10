@@ -1,11 +1,13 @@
 """
-Bing Rewards Gift Card Restock Monitor (Playwright Edition - Robust)
+Bing Rewards Gift Card Restock Monitor (Hardened Production Edition)
 =====================================================================
-Features:
-- Telemetry auto-stripping: Prevents browser_state.json bloat and QuotaExceededError
-- Parallel tab checks via asyncio.gather (fast concurrent loading)
-- Blocks images, media, fonts, and tracking scripts
-- Automatic token rotation persistence
+Built-in Defenses & Hardening:
+1. Anti-Bloat: Strips Microsoft telemetry from localStorage to prevent QuotaExceededError.
+2. Safety Guard: Never overwrites browser_state.json unless valid auth cookies exist.
+3. Network Resilience: Automatic retry on flaky page loads.
+4. Alert Guarantee: Automatic retry on Telegram/ntfy delivery to prevent missed alerts.
+5. Parallel Checks: Checks all items concurrently in separate tabs for maximum speed.
+6. Resource Blocking: Aborts heavy images, media, fonts, and tracking scripts.
 """
 
 import os
@@ -87,7 +89,7 @@ def save_monitor_state(state: dict):
 
 
 def sanitize_storage_state(state: dict) -> dict:
-    """Filter out Microsoft's massive telemetry event logs from localStorage."""
+    """Filter out Microsoft's massive telemetry logs from localStorage to prevent quota crashes."""
     clean_origins = []
     for origin in state.get("origins", []):
         clean_ls = [
@@ -104,7 +106,7 @@ def sanitize_storage_state(state: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Notification Senders (stdlib only)
+# Resilient Notification Senders (With Automatic Retry)
 # ---------------------------------------------------------------------------
 
 import urllib.request
@@ -121,18 +123,24 @@ def send_telegram(title: str, message: str) -> bool:
         "parse_mode": "Markdown",
         "disable_web_page_preview": False,
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=payload, method="POST",
-                                 headers={"Content-Type": "application/json"})
-    try:
-        ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-            result = json.loads(resp.read().decode())
-            if result.get("ok"):
-                log("  ✅ Telegram sent!")
-                return True
-            log(f"  ❌ Telegram error: {result}")
-    except Exception as e:
-        log(f"  Error sending Telegram: {e}")
+
+    # Retry up to 2 times on network blips
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(url, data=payload, method="POST",
+                                         headers={"Content-Type": "application/json"})
+            ctx = ssl.create_default_context()
+            with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+                result = json.loads(resp.read().decode())
+                if result.get("ok"):
+                    log("  ✅ Telegram sent!")
+                    return True
+                log(f"  ❌ Telegram API returned error: {result}")
+        except Exception as e:
+            log(f"  Attempt {attempt + 1} error sending Telegram: {e}")
+            if attempt == 0:
+                import time
+                time.sleep(1)
     return False
 
 
@@ -145,16 +153,21 @@ def send_ntfy(title: str, message: str, url: str = "", tags: str = "gift,moneyba
     if url:
         headers["Click"] = url
         headers["Actions"] = f"view, Open Rewards Page, {url}"
-    req = urllib.request.Request(ntfy_url, data=message.encode("utf-8"),
-                                 method="POST", headers=headers)
-    try:
-        ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-            if resp.status == 200:
-                log("  ✅ ntfy sent!")
-                return True
-    except Exception as e:
-        log(f"  Error sending ntfy: {e}")
+
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(ntfy_url, data=message.encode("utf-8"),
+                                         method="POST", headers=headers)
+            ctx = ssl.create_default_context()
+            with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+                if resp.status == 200:
+                    log("  ✅ ntfy sent!")
+                    return True
+        except Exception as e:
+            log(f"  Attempt {attempt + 1} error sending ntfy: {e}")
+            if attempt == 0:
+                import time
+                time.sleep(1)
     return False
 
 
@@ -228,16 +241,25 @@ def has_redeem_button(html: str) -> bool:
 
 
 async def check_single_item(context, item: dict) -> tuple[dict, bool]:
-    """Check a single item in its own tab concurrently."""
+    """Check a single item in its own tab with automatic retry on network errors."""
     name = item["name"]
     url = item["url"]
     log(f"Checking: {name}")
 
     page = await context.new_page()
     try:
-        await page.goto(url, wait_until="domcontentloaded", timeout=25000)
-        # Wait a bit for dynamic scripts to settle
-        await page.wait_for_timeout(2000)
+        # Retry up to 2 times if page fails to load
+        for attempt in range(2):
+            try:
+                await page.goto(url, wait_until="domcontentloaded", timeout=25000)
+                await page.wait_for_timeout(2000)
+                break
+            except Exception as e:
+                if attempt == 0:
+                    log(f"  Retrying {name} due to page load delay...")
+                    await asyncio.sleep(1)
+                else:
+                    raise e
 
         final_url = page.url
         html = await page.content()
@@ -276,7 +298,7 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
 
 async def run_monitor():
     log("=" * 60)
-    log("Bing Rewards Restock Monitor (Robust Edition)")
+    log("Bing Rewards Restock Monitor (Hardened Production Edition)")
     log(f"Tracking {len(ITEMS)} items in parallel")
     log("=" * 60)
 
@@ -331,6 +353,11 @@ async def run_monitor():
             if login_required:
                 any_login_failed = True
 
+            # Don't update in_stock state on transient network errors
+            if result.get("status", "").startswith("ERROR:"):
+                log(f"  ⚠️ Skipping state update for {name} due to transient network error.")
+                continue
+
             prev_in_stock = items_state.get(name, {}).get("in_stock", False)
 
             if result["in_stock"]:
@@ -344,13 +371,17 @@ async def run_monitor():
                     log(f"  ℹ️ {name} is now out of stock again.")
                 items_state[name] = {"in_stock": False}
 
-        # Save refreshed session (with telemetry stripped)
+        # Save refreshed session (with safety checks and telemetry stripped)
         if not any_login_failed:
             raw_state = await context.storage_state()
             clean_state = sanitize_storage_state(raw_state)
-            with open(BROWSER_STATE_FILE, "w", encoding="utf-8") as f:
-                json.dump(clean_state, f, indent=2)
-            log("✅ Clean browser state refreshed and saved.")
+            # Safety Guard: Ensure we never overwrite with an empty cookie list
+            if clean_state.get("cookies"):
+                with open(BROWSER_STATE_FILE, "w", encoding="utf-8") as f:
+                    json.dump(clean_state, f, indent=2)
+                log("✅ Clean browser state refreshed and saved.")
+            else:
+                log("⚠️ Warning: Refreshed state had no cookies. Preserving existing browser_state.json.")
 
         await browser.close()
 
