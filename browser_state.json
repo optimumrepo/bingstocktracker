@@ -65,7 +65,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1825923333.521212,
+      "expires": 1825923673.631162,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -461,16 +461,6 @@
       "sameSite": "None"
     },
     {
-      "name": "MS0",
-      "value": "0b597b721c464f70a77c33bdf7706c35",
-      "domain": ".microsoft.com",
-      "path": "/",
-      "expires": 1794387662.317801,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "esctx-kjmTRwn2GdM",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAz1cOLtexRdctl95r3NfAFCbMADsEFkrL-CZxmVERMOmVloFszeQfzJUdzoEYfmmfYqlYch6OzNBHgG-08Cx2tcWZfPQa4uv7ifqQNsYAGvozwevHhNQfsiz_-MCoRdYpnlZe2IfjQnbQzmlbt47Ac8oZNmdzlmjbCWvVEfWBN27nzHsurcHFwjyU8giyGIPyPRiKTuTOhuSk8ZcucYLweNPU0Z7jw0st99cHhBO2idiL-xGARSMiPuzwe31XMVlwrTsLEPm7gXiUflimRbNOlAs0zp5_Ccz98_WWCsZqtL8zEjwEP5oVIBqlz8_sLBYB9RYFUWfxOibYFFx_rjV_hlAly5Fq_11POGh1ciKzTqWiweMWGsLQwj18dD8nVPs0CuZvUQQLChpTun_uB40KlsxyE8MfuG36NqJAMjqpwrHRyU2aey5i5C7p4ksLgYAHm6NmXTkbgUJnedmwlWJnHotSUlU_LFW2GwXb6feDlrGEvzhFEkGNbNkWHnpOV129V5I5bOVFM4rOwYZlJ7nU-se1hnOzZjc1oETuksc0dcG_sBEAn-A4ktEkTAbp0yUHZQtUEBR8HXxK-RAhSTyHA2t8ms6IWTldV0P5xuSjZc3TdGSOjy2V1mCXAJFNdw7N2tNCaRRzo0SLP-lI41wuo2HLebe8B4wmj2mdCZQf5vlQPdD8cIsjJfbPwA8_Qr5PIAA",
       "domain": ".login.microsoftonline.com",
@@ -517,16 +507,6 @@
       "path": "/",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "ai_session",
-      "value": "BsGwzISdUkEn1865mr4R24|1794383144702|1794387333524",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1794389133,
-      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
@@ -597,6 +577,16 @@
       "path": "/",
       "expires": -1,
       "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "BsGwzISdUkEn1865mr4R24|1794383144702|1794387673633",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1794389473,
+      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     }
