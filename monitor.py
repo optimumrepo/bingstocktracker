@@ -259,26 +259,20 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
         # Check for explicit out-of-stock messages
         has_oos_text = any(phrase in body_text for phrase in OUT_OF_STOCK_PHRASES)
 
-        # Inspect the actual SKU action button (specifically the button, not nav bar)
-        btn = page.locator('main button:has-text("Redeem"), button:has-text("Redeem now"), button:has-text("Claim")').first
+        # Inspect the actual SKU action button or SKU card elements
+        btn = page.locator('button:has-text("Redeem now"), button:has-text("Redeem"), button:has-text("Claim")').first
         btn_exists = await btn.count() > 0
-        btn_is_enabled = False
-        btn_text = ""
+        has_sku_card = btn_exists or ("pts" in body_text) or ("points" in body_text)
 
-        if btn_exists:
-            btn_text = (await btn.inner_text()).strip()
-            is_prop_disabled = await btn.is_disabled()
-            has_data_disabled = await btn.get_attribute("data-disabled") is not None
-            has_aria_disabled = await btn.get_attribute("aria-disabled") == "true"
-            btn_is_enabled = not (is_prop_disabled or has_data_disabled or has_aria_disabled)
-
-        # If SKU card failed to render at all
-        if not btn_exists and not has_oos_text:
+        # If SKU card failed to render at all (still loading or network error)
+        if not has_sku_card and not has_oos_text:
             log(f"  ⚠️ {name} page did not render SKU card. Treating as unverified.")
             return {"name": name, "url": url, "in_stock": False, "status": "ERROR: SKU card not loaded"}, False
 
-        # Preliminary stock status
-        preliminary_in_stock = btn_exists and btn_is_enabled and (not has_oos_text)
+        # In-stock determination:
+        # Note: Do NOT check if button is disabled, because Microsoft disables the button
+        # when the tracking account has 0 points, even when the item is fully in stock!
+        preliminary_in_stock = has_sku_card and (not has_oos_text)
 
         # Anti-Fluke Guard: If in stock, re-confirm after 1.5 seconds to eliminate React hydration blips
         if preliminary_in_stock:
@@ -286,32 +280,21 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
             await page.wait_for_timeout(1500)
             re_body = (await page.inner_text("body")).lower()
             re_has_oos = any(p in re_body for p in OUT_OF_STOCK_PHRASES)
-            re_btn = page.locator('main button:has-text("Redeem"), button:has-text("Redeem now"), button:has-text("Claim")').first
-            re_btn_exists = await re_btn.count() > 0
-            re_btn_enabled = False
-            if re_btn_exists:
-                re_disabled = await re_btn.is_disabled()
-                re_data_disabled = await re_btn.get_attribute("data-disabled") is not None
-                re_aria_disabled = await re_btn.get_attribute("aria-disabled") == "true"
-                re_btn_enabled = not (re_disabled or re_data_disabled or re_aria_disabled)
+            re_btn = page.locator('button:has-text("Redeem now"), button:has-text("Redeem"), button:has-text("Claim")').first
+            re_has_sku = (await re_btn.count() > 0) or ("pts" in re_body) or ("points" in re_body)
 
-            if re_btn_exists and re_btn_enabled and (not re_has_oos):
+            if re_has_sku and (not re_has_oos):
                 in_stock = True
-                status = f"🟢 IN STOCK! Active '{btn_text}' button verified!"
+                status = "🟢 IN STOCK! Redeem option available!"
             else:
                 log(f"  ⚠️ Re-confirmation rejected initial in_stock reading for {name}.")
                 in_stock = False
                 status = "OUT OF STOCK (restocking message found on re-check)"
         else:
             in_stock = False
-            if has_oos_text:
-                status = "OUT OF STOCK (restocking message found)"
-            elif btn_exists and not btn_is_enabled:
-                status = f"OUT OF STOCK ('{btn_text}' button is disabled)"
-            else:
-                status = "OUT OF STOCK"
+            status = "OUT OF STOCK (restocking message found)"
 
-        log(f"  Status: {name} -> {status} (btn_found={btn_exists}, btn_enabled={btn_is_enabled}, oos_text={has_oos_text})")
+        log(f"  Status: {name} -> {status} (sku_card={has_sku_card}, oos_text={has_oos_text})")
         return {"name": name, "url": url, "in_stock": in_stock, "status": status}, False
 
     except Exception as e:
