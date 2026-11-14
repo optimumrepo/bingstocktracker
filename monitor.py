@@ -22,6 +22,7 @@ from playwright.async_api import async_playwright
 # Configuration
 # ---------------------------------------------------------------------------
 
+# Items to track for restock - add or remove entries as needed
 ITEMS = [
     {
         "name": "Flipkart Gift Card",
@@ -32,6 +33,8 @@ ITEMS = [
         "url": "https://rewards.bing.com/redeem/sku/000485000005",
     },
 ]
+
+REDEEM_CATALOG_URL = "https://rewards.bing.com/redeem"
 
 OUT_OF_STOCK_PHRASES = [
     "so popular we're restocking",
@@ -205,6 +208,44 @@ def send_restock_alert(item: dict):
     send_ntfy(f"{name} Restocked!", ntfy_msg, url=url, tags="gift,moneybag")
 
 
+def send_new_reward_alert(item: dict):
+    name = item["title"]
+    url = item["url"]
+    details = item.get("details", "")
+
+    log(f"🎉 NEW REWARD ALERT: {name}!")
+    tg_msg = (
+        f"🆕 *NEW REWARD AVAILABLE!*\n\n"
+        f"A new gift card / reward has appeared on Microsoft Rewards:\n"
+        f"*{name}*\n\n"
+    )
+    if details:
+        tg_msg += f"Details: {details}\n\n"
+    tg_msg += f"🔗 [View / Redeem Now]({url})"
+
+    ntfy_msg = f"New reward added to Microsoft Rewards: {name}"
+    if details:
+        ntfy_msg += f"\n\nDetails: {details}"
+    send_telegram(f"New Reward: {name}", tg_msg)
+    send_ntfy(f"New Reward: {name}", ntfy_msg, url=url, tags="tada,gift")
+
+
+def send_removed_reward_alert(item: dict):
+    name = item["title"]
+    url = item.get("url", "")
+
+    log(f"⚠️ REWARD REMOVED ALERT: {name}!")
+    tg_msg = (
+        f"⚠️ *REWARD REMOVED / DELISTED*\n\n"
+        f"A reward is no longer listed on Microsoft Rewards:\n"
+        f"*{name}*\n\n"
+        f"It has been removed from the Redeem catalogue."
+    )
+    ntfy_msg = f"{name} is no longer listed on Microsoft Rewards."
+    send_telegram(f"Reward Removed: {name}", tg_msg)
+    send_ntfy(f"Reward Removed: {name}", ntfy_msg, url=url, tags="wastebasket,warning")
+
+
 # ---------------------------------------------------------------------------
 # Page Checking Logic
 # ---------------------------------------------------------------------------
@@ -304,6 +345,84 @@ async def check_single_item(context, item: dict) -> tuple[dict, bool]:
         await page.close()
 
 
+async def check_catalog(context, monitor_state: dict):
+    """Scan the Redeem catalog for new gift cards or delisted cards."""
+    log("Scanning Redeem Catalog for catalogue changes...")
+    page = await context.new_page()
+    try:
+        await page.goto(REDEEM_CATALOG_URL, wait_until="domcontentloaded", timeout=25000)
+        try:
+            await page.wait_for_selector('a[href*="/redeem/0"], a[href*="/redeem/sku/"]', timeout=8000)
+        except Exception:
+            pass
+        await page.wait_for_timeout(1000)
+
+        raw_items = await page.evaluate('''() => {
+            const anchors = Array.from(document.querySelectorAll('a[href*="/redeem/0"], a[href*="/redeem/sku/"]'));
+            return anchors.map(a => {
+                const heading = a.querySelector('h2, h3, h4, [class*="title"], [class*="name"]');
+                const title = heading ? heading.innerText.trim() : a.innerText.split('\\n')[0].trim();
+                const text = a.innerText.replace(/\\s+/g, ' ').trim();
+                return { title, href: a.href, text };
+            });
+        }''')
+
+        current_catalog = {}
+        for it in raw_items:
+            href = it["href"].split("?")[0].rstrip("/")
+            m = re.search(r'/redeem/(?:sku/)?([a-zA-Z0-9_-]+)', href)
+            sku_key = m.group(1) if m else href
+            if sku_key not in current_catalog and it.get("title"):
+                current_catalog[sku_key] = {
+                    "title": it["title"],
+                    "url": it["href"],
+                    "details": it["text"]
+                }
+
+        log(f"  Catalog scan found {len(current_catalog)} active reward cards.")
+
+        # Safety Guard: If 0 items were found, it's likely a network/DOM delay. Skip diffing to prevent false deletions.
+        if len(current_catalog) == 0:
+            log("  ⚠️ Catalog returned 0 items (loading delay). Skipping catalog diff.")
+            return
+
+        known_catalog = monitor_state.setdefault("known_catalog", {})
+
+        # Initial run: populate known_catalog baseline without sending alerts
+        if not known_catalog:
+            log(f"  First catalog run: Saved baseline with {len(current_catalog)} items.")
+            known_catalog.update(current_catalog)
+            return
+
+        # 1. Detect New Items
+        new_skus = [sku for sku in current_catalog if sku not in known_catalog]
+        for sku in new_skus:
+            new_item = current_catalog[sku]
+            log(f"  🎉 Detected new reward: {new_item['title']} ({sku})")
+            send_new_reward_alert(new_item)
+            known_catalog[sku] = new_item
+
+        # 2. Detect Removed Items
+        removed_skus = [sku for sku in known_catalog if sku not in current_catalog]
+        if removed_skus:
+            # Re-confirmation guard before alerting removal
+            log(f"  ⚠️ {len(removed_skus)} item(s) appear missing. Re-verifying...")
+            await page.wait_for_timeout(1500)
+            re_links = await page.evaluate('Array.from(document.querySelectorAll("a")).map(a => a.href)')
+            for sku in removed_skus:
+                if not any(sku in link for link in re_links):
+                    removed_item = known_catalog.pop(sku)
+                    log(f"  ⚠️ Confirmed removed reward: {removed_item['title']} ({sku})")
+                    send_removed_reward_alert(removed_item)
+                else:
+                    log(f"  ℹ️ Re-check found {sku} still present. Skipping removal alert.")
+
+    except Exception as e:
+        log(f"  Error checking catalog: {e}")
+    finally:
+        await page.close()
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -355,12 +474,14 @@ async def run_monitor():
 
         await context.route("**/*", block_media_and_trackers)
 
-        # Check all items in parallel tabs
-        tasks = [check_single_item(context, item) for item in ITEMS]
-        results = await asyncio.gather(*tasks)
+        # Check all items in parallel tabs + scan the catalog for new/removed cards
+        item_tasks = [check_single_item(context, item) for item in ITEMS]
+        catalog_task = check_catalog(context, monitor_state)
+        all_results = await asyncio.gather(*item_tasks, catalog_task)
+        item_results = all_results[:len(ITEMS)]
 
         any_login_failed = False
-        for result, login_required in results:
+        for result, login_required in item_results:
             name = result["name"]
             if login_required:
                 any_login_failed = True
