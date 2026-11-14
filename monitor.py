@@ -34,7 +34,7 @@ ITEMS = [
     },
 ]
 
-REDEEM_CATALOG_URL = "https://rewards.bing.com/redeem"
+REDEEM_CATALOG_URL = "https://rewards.bing.com/redeem/in/shop"
 
 OUT_OF_STOCK_PHRASES = [
     "so popular we're restocking",
@@ -452,6 +452,8 @@ async def run_monitor():
         context = await browser.new_context(
             storage_state=BROWSER_STATE_FILE,
             viewport={"width": 1280, "height": 800},
+            locale="en-IN",
+            timezone_id="Asia/Kolkata",
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
