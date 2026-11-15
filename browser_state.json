@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1826322647.501119,
+      "expires": 1826322936.901567,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -503,16 +503,6 @@
       "sameSite": "None"
     },
     {
-      "name": "ai_session",
-      "value": "0aYe5BlOJnIfhn4uxHIlc0|1794754881164|1794786647503",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1794788447,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "MSPRequ",
       "value": "id=N&lt=1794786647&co=0",
       "domain": ".login.live.com",
@@ -578,6 +568,16 @@
       "domain": ".microsoft.com",
       "path": "/",
       "expires": 1794788448.553127,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "0aYe5BlOJnIfhn4uxHIlc0|1794754881164|1794786936905",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1794788736,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
