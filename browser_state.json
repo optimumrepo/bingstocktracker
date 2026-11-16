@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1826407534.672726,
+      "expires": 1826407863.944293,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -491,16 +491,6 @@
       "sameSite": "None"
     },
     {
-      "name": "ai_session",
-      "value": "ZrGSOvaKkIBGNNU9iwkcsC|1794841287876|1794871534676",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1794873334,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "esctx-YiTo93Lsd4U",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAA5Z5A-mTHO_9jn6xm6Xv5_s1tVkUQ_xWFz2D3RqhswMZeVWs8B2emUENgZOBIkwIw-fvPlU05BoqDmJTv59Qr1WwO310aDzUPXDRpYw7LzME0NfWoRAkQNKr-k3u17o7jXKT9UCjlBJz8vNB1uoveVkVYC7ls062MykMdh7RbovrXr42T6KxA7o9jrfAM8uiiaUslZ2aRFGtyXbONGEa4oP4cQrrmF7luvdNMckKjbg4OCoqMA3nBPxhxCA7NKuWjR-s_dDr3N9v5s2V8SZ6x9zvyXhPuyhEHJwCGkzhgfjgMM2MtETPkt4hFG0nyKNFccSLabpK8S3ikCc373NdoWPZUUtvF4bVX-B8tlN0UHcqG05tvLzQoAyoppR1Df4vi1XOHpIBZ0Gavlo9p_r07-6T-HwUNZZr6FNW0G0IGC8mJ9A6Z9lUHIMFJ5kqIcolMsqCLHjfn7UnfZA8idRz64-Yq-hLaN0YBOMI_Ufrs2plq_RZLoyquvj3IgJhWU90NKLuagt5csOjUy3IGeffdvdoXx5ywGN0p9upGhoKeEmlDiVm-NM_e39WWBnIKheOvH75JH0JqB_W1x5IRSYH6paNOnzmp4qXXEE5RUeq-Wh6STWywHxUX6yFudS8xK-KM4AN45b0zjO50cxROI4s2HPPH_wzZlbZOPW1RpdwTcwsE0taBJ-pFnEpn6nVOeZXIIAA",
       "domain": ".login.microsoftonline.com",
@@ -567,6 +557,28 @@
       "path": "/",
       "expires": -1,
       "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "rn_SID",
+      "value": "161463BBC07D6D2918E27BA8C1316CB1",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1794873664.254268,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://bing.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "ai_session",
+      "value": "ZrGSOvaKkIBGNNU9iwkcsC|1794841287876|1794871863948",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1794873663,
+      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     }
