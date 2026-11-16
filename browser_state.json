@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1826378732.476071,
+      "expires": 1826379332.964796,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -493,16 +493,6 @@
       "_crHasCrossSiteAncestor": false
     },
     {
-      "name": "ai_session",
-      "value": "ZrGSOvaKkIBGNNU9iwkcsC|1794841287876|1794842732478",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1794844532,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "esctx-6djIZjzt8hc",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAfhXbmyz_in3MUKXyulNaIlmI0iyvUpkkoqSeYiVrZFwut2WlqduFYeh4mhnjiXXG5u67y7aB3l1GPaNqa-s0zR7i0friyF4DCOy1trXzEofUHOptw3BxQkUyTrvmpEoqE65n1SAWPwwW0f-xQQ4G3akA8-VBIVBtq4UDO69f2mA4FQRI-Ml7HqrCGniPcVP7UBjSybRQ9i-LdsVnWTh6zPXq4ZFmLsnb6DZ7EBjRiSJapWf6Zl7N-8fNhUNYhIsKgKl-PesXDu3Cb-Knx_83-IS4YGC_btTE7mvhmhAl6tRGFiIc2PdfKcDiQZVo6IIIh8TrddrNSx8bUobEtEMpCO4aXwLt1WqkyGloUv8p2e61ssvzzQODWC6v9Hprri8-ql4RQ3uwckylO4pAGAPndVwdXolBOY5msuf6tZz-8owNn29LJv3kqEANHGwcPYpYJpYAJUgjPKSCddIwKHFgyHRNtm6gVTXcqjah0xB5AeLtOuitkbeBPNJdmoTX3YXWCkYswLLA58_BYoSgxNLBQkR9PM-BGRW7q3WypO4wv6nlooTjZ2Zs8LjBeMtq92wW3YVQNifp5Gjl3ei75hYCLSKHRl1Ya_CtCMcRB8QwzCU9nlXhsU92B13FZnz3WJv3VmUGueboZfVcqXidb9jVUVj3cFGViXV83WHyeBZmhY0hkkNSOJyNnmLQivTTdvhuIAA",
       "domain": ".login.microsoftonline.com",
@@ -569,6 +559,26 @@
       "path": "/",
       "expires": -1,
       "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "ZrGSOvaKkIBGNNU9iwkcsC|1794841287876|1794843332965",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1794845132,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MS0",
+      "value": "ee58854a066f48058ca34e8a1c74ac84",
+      "domain": ".microsoft.com",
+      "path": "/",
+      "expires": 1794845135.034612,
+      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     }
