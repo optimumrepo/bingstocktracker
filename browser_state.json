@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1827103263.702723,
+      "expires": 1827103548.332967,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -65,7 +65,7 @@
       "value": "AikJ8g9busNBp1e7VGlRhdI",
       "domain": "login.microsoftonline.com",
       "path": "/",
-      "expires": 1798159265.098583,
+      "expires": 1798159549.654584,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -391,34 +391,12 @@
       "sameSite": "None"
     },
     {
-      "name": "rn_SID",
-      "value": "30260EB413976C4037B216A812E86DFE",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795567549.330788,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None",
-      "partitionKey": "https://bing.com",
-      "_crHasCrossSiteAncestor": false
-    },
-    {
       "name": "MS0",
       "value": "8de3b9bcb66f4847bd6639907e71b37d",
       "domain": ".microsoft.com",
       "path": "/",
       "expires": 1795567551.325158,
       "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "esctx-pUAKca9cpQk",
-      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAA7gBGhyBN3OeHdlrgu3aHlLC7vNUYJs_30gF8Rs6vLa42YOknfNGk35vuq61cnKsV3OFxLYPiJIRhfAvwjZMd2McS9rLmuu4lqYKt-kPW3mSnRZJk7ZzwHv8wq2_IZLDzqDdoIAsxGPekcACzHk-zNc0N8ZFye_pL_0Q6fP3lsyK3m7CbNHONdeqMiUJKppSCVSI6J3V-BOdyBydDX6XhGXl99yJ4TKigEfdDC6VRMRmYEANQJ7FtIgZINl5N7iZZh5PbS8wZx2w9hUxlQm3N9de4q-OJhSFS8zMd77Gy652gjOiq-cjR22iimkjoEx84Ij5YkLruoIoXtUm7F02gn2V8mTGEzsKza5DyZoLkoGk0r6iOsXMLy-EK2R6BowxVsBpceWj9P9QN2ByVYwo0hfFfmuAulaj3Lmm0ICT-MGwMp9wbQQNFXqGhZEReIZjZ1WC3QkiVuqo7PNwFrPSKqf0VsYMmAubg5E3Ze0-UZpSNIPMDR3-pNSE5HMQpsbGrvHAoRXUm6g9dAcFuBH6EzflF28ey8TX_RdF5sWTLVdM44JlExJsEEgRNDNsjOfm3UigGmaghcQ2MJWFC3cEbXQFQld9sJgGZVqp3c-3iLm8RJY99uXUhBMMP5NsIHsRL67IVBltorSJ8jQwGAENOpQR3d0AJ5CxGmlg5NOThC7HHNoKoZaLOpAzFTnprZ7m0IAA",
-      "domain": ".login.microsoftonline.com",
-      "path": "/",
-      "expires": 1795567550.416667,
-      "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
@@ -439,16 +417,6 @@
       "path": "/",
       "expires": 1795568165.101174,
       "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "ai_session",
-      "value": "0I1h0mSBNzRP9mNdkkfBZY|1795533351970|1795567263705",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795569063,
-      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
@@ -518,6 +486,26 @@
       "domain": ".login.live.com",
       "path": "/",
       "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "0I1h0mSBNzRP9mNdkkfBZY|1795533351970|1795567548337",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795569348,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "esctx-hvobwLurbBk",
+      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAALauBY_8mvXiAnwLK808XnUuGoe0GLWjRECSLpOiVAM8W4wB5yYgk-9WQlSIGd-DtVAVzCGbVabIoK1IvDOVsSw9f1xMfzZYW6Nn6fwguh-YAkIh5EII0s2JqxhyTa2EmB_qsUoQp_3tQaLQHduWGF8qVn3UYFENo-sIu2m3I8ELrOUSW783Fxp2t8ms-64DS4VWQKxRAzo6f-LlamlQlHYJGZHZVOiitvpzkEV61DK8UCxfYlazOnKgRXCrUWyWexWnxu56twPwUrZ0dFLS7xnxZW29XgkI9QX0t0U6yPo_58fxQPydvUv4FGbebX2Uy9xFhtPjG4Am7B390rDpBtH94FrVGkPP8erVs6LUbIBjGnUHB04w8BCswo8j75ScnNwNR3jKHfQew2gD9HOe-yyiW4ABf9MC2KGUI0eu98oocrurRLBw8UGykYntlzwl_MKI4UmkBVH6v7EqB7rjFDprhkkA1exSF2uD_DJfmjdlGKj0XiPRsQiWYzeJZ7L7D1atQm-FOJ1zPmMWiunOpTpKCnTPD9OY3KebUt7sHBJzjbsn3tHU29hYBxNTIbrEj7CByeG2UJsZE7rRTv3BBqDrAz51jvSCi9FfkiFJ8J_4B1eJ0Gi4KFMc5U8gd5ldNu8LQ-SMb995yO2tRsnDYEFyHPNwEgor3MJIlfqqX8DIwGZ897qGUaPWHoxbh1RzbIAA",
+      "domain": ".login.microsoftonline.com",
+      "path": "/",
+      "expires": 1795569049.654533,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
