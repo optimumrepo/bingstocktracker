@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1827161149.790039,
+      "expires": 1827161454.364195,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -65,7 +65,7 @@
       "value": "AikJ8g9busNBp1e7VGlRhdI",
       "domain": "login.microsoftonline.com",
       "path": "/",
-      "expires": 1798217150.967417,
+      "expires": 1798217454.347796,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -391,26 +391,6 @@
       "sameSite": "None"
     },
     {
-      "name": "esctx-NoLor2u2j54",
-      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAiHeoadMl-tWpmfUl8S5ZJWMkH-3EGatTknfzDSwDJEcd07lL2RKuHXDA6oivb20FqzEA-SUH4eacLuZWUPGd_GoO1DyChBx-39r6KUKYqqvh-712MLURHS1A1ytmLTzAY_TYGjgC_p3ZB9I5wLbvCaJmIpMGhmCVjCvaHaut6naNxgQMrrWLVEPrPOWs7TyzSQUkoqp6UyowIeAflz1EaZRjwt5eo11XTZXB-tmCa6fW_Zg4iu6Jdo6RHx0jkc7eSQ4dLkJzeNGNhQY2XzJasm9bJhqBj7p6LScimou6inJHKg33L1_ApQSHlyZa30WyA4eDsNytPYT1Tma1pmbWD-v-IEHWbnQ3jwZr4_A6xnX9fgqTjuha6m0KfZoWU0yIKWO2tFXOd599kBJ_n8l4_FP-gAJg_j_Mx_bLCpMWsnwpmyOIMQIaMKHwCzo57LU9e9id5842OdYpL2wE9vCMIaFzrefGN1-B_R4zLjgMQSdQONTHLspz7z5jHmsRDLabb2zmQe0DGdmvfHHwiXbIAkUf29vlvUYAtAvuHMy9XfdeGHZKDptLkjFg3vOIJonN4csZs8ktgjVMfXgt-CyAABx2FQD12YsCz4vh2pfpRIzIewL4hZoj8UQy-ElDEYPJInc5XDyxQ_-tn-hjJLqD3pyxD-ngak0a9-_IELjDeOBL6JhhycjYnH-uqG6Uv6CtIAA",
-      "domain": ".login.microsoftonline.com",
-      "path": "/",
-      "expires": 1795625154.483307,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "esctx-IkHATfPfJM",
-      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAASGCbDvm02gu1Ikmt52D0QhMi154GVtrOY10G7rUyb9tkdLinvxGtMADsSDrsZhroKWLa8VwBljV3DIv-FXZXb5KZddxUeueUIPTefwht_kW5hyG0WyQxVEJ83nzAwA7M4sVDzpFYRXk5pAQ9ZgOf7K1Pj-amSFp9HHJBwT1sWvCDnfb6Cy_wc9l-3m9WdFn-v_eOhcCL9XOllFlAVup-GOBGvsRlmKoPyePE8f3zni5Pgcve0Ihq70Duoxtz1vzpGUNrftbpSzvBpqC5DLbp8oRxE7Qmebscq5wXSN6NiqHF1HQmXTyQA3lXXRrK8GVJFkxq4OI-EcykA7XpxG04AZEme8I0_G4-CRPQZhSiQKQBkllTGdYa26YwJJMnMoNVVD-bcCBSdBQ41p8ylTXbZFPuM4OwmtN9USzq9gFIq_aibCZOejV-R905LfRxvfyp8LUtghmNFgdYZ8BivR6rOMmki9gXeAy5s3psUII8JD-G0HJXE9QCMVK5o2wjqqdxHBkrOg6yyZWM4hCcL7l1v6hB9Tgpf53zXLIZPuRLFbBd1UxKPK-WTyxTzT6vHGXBTqZpB_S99iM2LJFAv2xvkpkFDcI69CWpdvsMbeSqwCnCphZvOkBW2fv8ovVLXY5s_MtxBN7QLed2adZZhMqWFM0dCoDzH8zitramupPd6eC4PHbi7JB5ldLLSL_CY8hdIAA",
-      "domain": ".login.microsoftonline.com",
-      "path": "/",
-      "expires": 1795625437.537436,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "rn_SID",
       "value": "229FBB426BBA6A7F116AA35E6ABB6B54",
       "domain": "rewards.bing.com",
@@ -459,16 +439,6 @@
       "path": "/",
       "expires": 1795626352.324347,
       "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "ai_session",
-      "value": "Klx7i3i0zRgxhQISlO0ppw|1795619752403|1795625149792",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795626949,
-      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     },
@@ -539,6 +509,26 @@
       "path": "/",
       "expires": -1,
       "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "esctx-mLDpJOuSQ0",
+      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAsCNXLOfiTgBUhMmGVX3EJxHuHq6yxDefnGB6ZAR1QQXOHDuSYZwE0J1uffVntBD7IvewvAtDohmpEKMvl3FnR_JFe4qyFqXqAWX40suZMkOtEvsAGLyelAnpwh7NMTIh9sLviBWdITIZy84vunCvWh9hNIUm8AAduY_--OFBBEiDrXl1Il8OPkNpTKHqjbRpqz61xR_RhjPYYFEqNQ5WO_CUePn_164d4AVUkWC0VhxeoUByZdjuV2uBZXUhH83p20lJqQh9r4flS5cHhD7OCURx6TfN_9eJ4wpb2sh9n5v0aC9MfpyxQqhXtSkMd9heP-eemCldaPwCAipVQHfmAtaRH7l7wqRnMsMq0kKXSiTO0yTg3EDSsreDxfDPakvg6t6Bx4xnx962QayW11BYuAfKx4ct7vTmaGQWA_CqD5UD2Puhsszvf0pegysbqLDsr-ura_5lKhxUNvbcahXLZMuof_-t5PQDoObsccIqnmvHeDlDpdpivOpUQkbd1vUPUlgftwopdusITlB94fkUq5K4T4VrxWPFfPAQNhaQbkx0Lj9kbLRleo0s9jpUGyhpkFN5WzclsAgNBiY8vpmdjHtunjP8FtkgxBIZgxCEZDRmgt2NHIgnCsNBiOoPT2Ukax50z1D8U_gzHqR3v3FoobVu6IhB32hs_GFYru5lckCw8RwVLlYqh6mzuCFYwn6tIAA",
+      "domain": ".login.microsoftonline.com",
+      "path": "/",
+      "expires": 1795626954.347712,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "Klx7i3i0zRgxhQISlO0ppw|1795619752403|1795625454366",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795627254,
+      "httpOnly": false,
       "secure": true,
       "sameSite": "None"
     }
