@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1827124263.29592,
+      "expires": 1827124544.579619,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -65,7 +65,7 @@
       "value": "AikJ8g9busNBp1e7VGlRhdI",
       "domain": "login.microsoftonline.com",
       "path": "/",
-      "expires": 1798180263.399356,
+      "expires": 1798180544.858123,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -391,18 +391,6 @@
       "sameSite": "None"
     },
     {
-      "name": "rn_SID",
-      "value": "06BBEB50508D648C0572F34C51496503",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795588275.783356,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None",
-      "partitionKey": "https://bing.com",
-      "_crHasCrossSiteAncestor": false
-    },
-    {
       "name": "esctx-lIardnlxXkw",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAGC4RdncuMT-NxisDNVF4FfqUddzByjaiR6dpfigC2Z4YAm0nYPnFO_3dO5rYoR3sWLJ_kv376R32wvPoomxBwYcVPct-NU6VCe-lRbDMNH-h-ZwA0OixRSgpDSroD9P54mMFqzqSEYY59I-KAUDpBV94zscTDODnPHI0nDc3UMBOaHPRRI9kdxShTpeuZ_OL10haB2LS0cc3mDF3lIgRLkAh-dK4aClPTcO2_MhKQAl9WWwNMDxamWc-PZknQCB34l5T2q7_OA7_62Wc2Vif6oALEQrm0hdmyku9-RXYqQLIeUtCk9Ve4y_7iMYynQ2pNdL6j9alAUrNOvsl9TcD5FKCf7krKUDMoFKUAKHx_9OneHv40DUo-GZSPBpY41Z4EUHQuEPxCuJ98-Z_07zx8PNN0r9BTrAIyIe4XNlyfLWoglzAmQRNzG7sVgQbMveufz60t8Yn92fJbh1XvdbE50N6xTZHanb7cwDSxjd5HgJmMqEwJuYU5vHS0J_w88eG6iQHCkvkfR2alJ4DzedptbZ7aJXILrRjkXCqtKTHJBE3d1Ab6-sqV8uXY7rZ8o3-QOfI9ZVG3hnAK6EWjmO5havW519l-nxzoGdovsVCEbjiNhcThyrcJN2W0zul8jGUHv9sqJncYQDGdt4MFXQ2cH3nDhRy9fXflUfPF_PzVbXcCJ4-yUEmkfPTNMMdf_TgIAA",
       "domain": ".login.microsoftonline.com",
@@ -458,16 +446,6 @@
       "domain": ".microsoft.com",
       "path": "/",
       "expires": 1795589741.746683,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "ai_session",
-      "value": "0I1h0mSBNzRP9mNdkkfBZY|1795533351970|1795588263297",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795590063,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -538,6 +516,38 @@
       "domain": ".login.live.com",
       "path": "/",
       "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "rn_SID",
+      "value": "1426AF9556F964740571B78957BD65F3",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795590344.706738,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://bing.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "ai_session",
+      "value": "0I1h0mSBNzRP9mNdkkfBZY|1795533351970|1795588544584",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795590344,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "esctx-eFvR5ypmBcs",
+      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAhJXFqgpESe_oPa7OSbPG5zd5ShbMoKQ7icEISdKmsrh-ETtAhcxCaM5bg1I9OHh37I9wMwRfzdVGWF1Wp5GiT7FB4kf-eW3Zpnp_mp-ofXuW3f9i-h58QgN8u402Ka6m9S6IIOgSOe8E4xU6Xet5DeRZeVsVwPa3SRfE30KEx0kRuUtrg2VX31bJw938xxW1TDjgP6rA9C4ctTCsk1MYutWH2KkevEKgrVZKOTBSFw16fCzPKPwaUHafgvOZmX1dPt84tZfOVPXwDv92oR-wwIXOfqkrqUBzcuGpWQjaUz-sZ3r8gVirnz1wFl315YsI-NCHq1YtVxBJ-YhiqBZ9o0JLkK6yGVc3uyL3Va4IuBgd6AskfBg8c61XKOHMP3cJwMl0K0A_8zuFhApEbQoxqWfWUWNZkIuPpjWnmrbdyC0GLJabSXPGT7bA6Z4zdryf_QMW6us_Xd7LDkN0h2L7SnXhW-O9qZrCqlcpyBTeOlIfLyCzsWipjv7n-QFHeIsOsDmTO51XANuGQyvRw74CcMdRHQ3wN786UNpgi2PbRb8AuaOMXc0BCNXFbLP_D7WGuGeOFsA1adeXup1OoIYewwq2rhdtNTAHjPJUVcPr6QZhNAjQt7U0WpWONeiCoGed7bXv4QeaoFretQQRmvB6iSfjN5yCzp0vPZ1OakkUxVspgvKpAmiW7CyF3YJ3N1sdIAA",
+      "domain": ".login.microsoftonline.com",
+      "path": "/",
+      "expires": 1795590044.858045,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
