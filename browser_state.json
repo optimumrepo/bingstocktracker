@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1827315067.606998,
+      "expires": 1827315342.56325,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -65,7 +65,7 @@
       "value": "AikJ8g9busNBp1e7VGlRhdI",
       "domain": "login.microsoftonline.com",
       "path": "/",
-      "expires": 1798371067.64052,
+      "expires": 1798371342.683243,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -391,18 +391,6 @@
       "sameSite": "None"
     },
     {
-      "name": "rn_SID",
-      "value": "13DA032466C76D071BA51B3A67036C3F",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795779087.062473,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None",
-      "partitionKey": "https://bing.com",
-      "_crHasCrossSiteAncestor": false
-    },
-    {
       "name": "esctx-2WgkDMyNShE",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAA-bbqzVijCUURgS4EyEZPWKMJMV9enHdU_aTwDDFgL8U2v1TE0KsNLzNUFMvx1NeqwLoKI_gfbExzg1MzMmUl9ALLbdw_xzdgdMhRbLTk4L9jfkjhJAhxqA-Z74-n76mPSFdHKOvGJUixBOcO1n3XLZGFb8scf6hWRFgTPVl75tvke5aV9HNBuD6TgMpNCUFvlkW5Ge00eYZji_Gi0MiVlc7MK3ajJ_Eh8kLVoA_JNkeUHnWzQD0wmMqJ1xo7IDX3tPsPZtvy8LD_skOwiRAqJOpI9yeJHD68T9xhpwoPy-0XpYATXIzQqulrhHqpSponM-CokWdKn8xhgYY70dzyiso3Qm2akwMAGksf5-AgBdrrWnRa9A9OYWF2MLCqVwG5hjVD3ATywKqPwplrX0bYtdVl2muMs_65dZyX8kIH7SUc1JF750248ceQPSHWLLUN5HTQ7XQ17_TG1MwhB8zVBOrwOwEXfW4emHFr8S8cbS4etM9ylkV3bknkxdmRPkkTKje7G_tb_IWZNYhLi_GcRH3vJIDTqiJM8Jfj-f4hWpt6hl5l72xzjLojfZ_YoLruXvwr7hAPtmrHUaUWjFkrEIzk_CHsxzwbjulWiphJWyF9Q7bt-zfnDu1r0QZZIeY0M4yDvEJLqgrICl7rZDXcNiEJiDtJWWgCvVGo3chR2JaCud53K9-DzhbwVuuHw61EIAA",
       "domain": ".login.microsoftonline.com",
@@ -458,16 +446,6 @@
       "domain": ".microsoft.com",
       "path": "/",
       "expires": 1795780541.795869,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "ai_session",
-      "value": "kuEsmG5gV/00qNR3lHsgWQ|1795706156248|1795779067610",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795780867,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -538,6 +516,38 @@
       "domain": ".login.live.com",
       "path": "/",
       "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "rn_SID",
+      "value": "0228AB014B326E3E35CCB31F4A5A6F84",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795781141.622014,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://bing.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "ai_session",
+      "value": "kuEsmG5gV/00qNR3lHsgWQ|1795706156248|1795779342566",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795781142,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "esctx-FftRZVl0Ouo",
+      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAQxPut2xtqMiEC9nZfC1nyWV6B6XUYRSFf0bUxYI4LfgajoeO92WnQBQ-L0VLtwBgpUna8kembZq4K07yI650x_KTsYbVm9OTwnQYfuwQbdqTu_P5MW7MBoObUw4dNn1OwThygnZVKR30rQ0AOI80UprZkFDv3IRsr6g3NM06AHAKDhkx8UomHSjEpcYO35cd1yOmkmzO26FUO4VIbu1JOlSFyulvqmJHsOHHeufQ379FusFdcoyZznRnApLVY5WmZgwOkX3ZU0T-em6GTWUkmwYJrLfr8S2q3846nRSEq51mfXLvlxoAyxXrrE-KVsZ0bgVcw7_hP_O4rUjzGxxzEH32orLrXndxENOceVBFIffy3VZ-RfIL7O8mpIGcJ3U7KbW11KVphISrYmbCFnT82W_a2GffFDnr25uSbXdn9xdziL1r42iK3GfSK2IOkEXaxPAeAUoh4v50B2WIRfhplP-oCtuzg3nBId26KuK1Mm06yCDFkV2kkdCtS5U6MHypfwsdiFUm9NGk30KPjhV_-S3buLz59U3BkBG2lsJgGPZhs3Ujw_jko1-txIdY2zich2O5Lk7Wonk1TmCDCU1UaAbCBBFURtq47vu9rJQsJ-SzQT_NL_cWxCBfRsRPXR1GhgZ9fMmVkSEwW-yBADlr6uD2lj4uugjvhSCBXxppDFt2V_H-TtFIfyFxmoKoCXGaIAA",
+      "domain": ".login.microsoftonline.com",
+      "path": "/",
+      "expires": 1795780842.68317,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
