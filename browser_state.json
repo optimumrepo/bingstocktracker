@@ -55,7 +55,7 @@
       "value": "4b6df805-3f75-446a-bfb9-9c5c88b492b4",
       "domain": "rewards.bing.com",
       "path": "/",
-      "expires": 1827331540.867976,
+      "expires": 1827331864.534214,
       "httpOnly": false,
       "secure": true,
       "sameSite": "None"
@@ -65,7 +65,7 @@
       "value": "AikJ8g9busNBp1e7VGlRhdI",
       "domain": "login.microsoftonline.com",
       "path": "/",
-      "expires": 1798387540.962582,
+      "expires": 1798387865.741102,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -391,26 +391,6 @@
       "sameSite": "None"
     },
     {
-      "name": "esctx-KX0s6yOvS4",
-      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAASEyi2_i1DUJwTF0y1LAxkmOtLmIWK7fa02eYriRRvvK00oP5Rj1jMU3dcpKv4vqqWK1NpSOHGnRGrLU546TBXOhIiZeJ1ooG-1xA5DVnra9VGStWYUF8Bz5k0egXq1hjTYiocpVLJWZuutLa4q85uQA-zgjG94jjf_rfBebK3hDkMTudfwl3AM-1t-Vtt9SLq8JSc4qCLlTw09YrgqteQLS_XLwLemts_AyvwQ37ERkKbe94fBgZ8GYwTl_NjpMCJ2DH0PaSEy9dU5c_Z3uWaYUh14hH74LuPj9p5YZTziCrxUm6uIAaHZdQ46d3aY0Dr17EAROH7HQaabbmbAo1uyFg9l_f_eIWQddY5VSQ25R7g_WAHMkjJLFhBrx_D0G3LevTMFEERDZlHs8Xc3KU-eluhCsVWqTkxM0s8f3DYPOWNQYuZuBilB3mAHJfNzfsK1JPg6wUHd0JL2hk8LjhSWHcsbuqvxzEEM7gC7wcOwBqCGZrmBdne3-owL2s5TEw8DjRYF3zY0zVWaVgfYy316OqbuO0XsvBXmkgL3QmxSlaSYjBoB_dY0FL6FWQeoW3Y1I8L18SMJzivOVUXP-RXYGpNvfAKsYRcNFZJnXGXl6C6SnsnKqPEJ__snm36m8GiImLRaGJSrONa8o2nSdr_mf2l62ukNfBK_4-mtqqDsBKZNovnAzzIjD0RSiWIm-aIAA",
-      "domain": ".login.microsoftonline.com",
-      "path": "/",
-      "expires": 1795795549.363465,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
-      "name": "esctx-5UY1GYHXak",
-      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAhz3_Kykg1G8FyqUgw-R3-I-BIw6zJCKRF7c0B3MrRaaA_JlB3jDKKEWtrJm7KsFGOJU6LNVqwOqk7gWui5J6XwWiEWO_VH8vqgeiKsd-m8WiBni7mQbafAkygyl5S56t9o8GvGxIq2fAoNEdCany9wnUGkyBlaSrgn9bKmhBG8LO97_fP5awy5_XLz3lB8Agc5bMGdND6NoAPZJuCa53NoR5tsPmRrpZVsX0Osz1qtjm23926IOnzxZV_WjhkCH0zYf_T1xUxCz_5MfF8kK0CsviHpKTf0sktyRXXY5iYDsP0xVU1ZMirp_mVjBIOZibDdYyzTlc0nYb-FssE5rlwiv4cfHxO0FOCzmIJWb4AoM9-KAcC599duL-6sVzglF7HTAEmIXESRaS4V6lMcvZKKo45VrvuPyrcVTmxfDygkjZZUjxakKsnSdaAL-sAqa06gd7G-EJJ6V57GbOZi6bZlAWupgHXYqhTewS3uiI7hhwU2w86mSSSdStvKR7oVZGzU9FtIQ3EX-O9P6fMcgy1rM279aJCRro6EJ1KYe1hvSB5J7iKurR-_f1Ly46eAxuB_i2WJNN11VSbN5QzgPRh56sDU9JuAeZ_R9qATBLCos35eb5I94s0tXQgzae_re2zXYZvNvrqT8AJMv0EM9HT4tDu-yrMD8QQ-TWGUM52Tdo-XSQfXVhkSYv4ooWV9jGIAA",
-      "domain": ".login.microsoftonline.com",
-      "path": "/",
-      "expires": 1795795852.334676,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "esctx-WLfJtDymqhE",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAJTLZJrMYWWOnqmkU1xWj93uH7gDt3dYouR3PbNbWs-9FugpLehRmfqLUek-ln6DcwaaW10c0OStznlhfs_82P3C6QO38cEN6M3vJqdan5g4fv00VdfAq7S24vayRNo-MsNbiLh0HSXJ4oWSmvPkkv88v-EE7w6vRug4ZTwaN8jtQUcPi1bMjP9RmeOAdktkWjEQ6LDnZIykioP8e158D1nY7IX0CmZgxvbFQWFUS9px7h_eLs7VqCmREjUPUlqYvsz6NWbIfEguu3h8nTfa5jmFIBqieMadIvXgBTY5U8xVCkxAri9v44NRdVSc1NgIpSRZGqBsyETBLh2Xuef-BPxS-QKCBVx0YCT3aGUm0YKWKuomadmLK4EEfbmFwO951Vm6eepcakIXsdvogUKOAf4QRYSNQaOzbc2sh-CpVyTLX3HfeEP3MraQ27z-UqxdEgiesPMSmKh-46l-ZS_kUBWdKjSottowe_ZS6kWc2If_44Z4U2kEjVXPvIDezjYMST7KtULYehS7aOYtAo5kDlhDHLYk7NePOcr6JMZuhOrC8giquVN0bI8Wo7pcBJmlcOcHMitdv1tt-5vi3tQHx7QybK4EPK3YqL-thj0w4Ltmb7IrnafKPT-syGCbgTyLwiQA6ycKCPRd_VHVz_qn2RsFXnZvcGCe29wiV-xbO7GuOx18JVPMNuo9ypSHkDPGnIAA",
       "domain": ".login.microsoftonline.com",
@@ -523,21 +503,31 @@
       "sameSite": "None"
     },
     {
-      "name": "ai_session",
-      "value": "Yxrmf2l72UqgV1ueSVJtQX|1795792561285|1795795540873",
-      "domain": "rewards.bing.com",
-      "path": "/",
-      "expires": 1795797340,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "esctx-lphWw7lXcQ4",
       "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAyjwlxQ9baHNNdF-IdN3ZW-Z-ZQ-taA-cCWMauPyEAuiO2v1qvnyFBZrhUqWWnI9GFVJQofir8wwoKWH_Jt9SHQtQfWN4_I3Rfi1TqAwbQE9EAymUFoBsi6ViuWvmib2VfmjQsNSPVjf3jswVbg6itt0clGPmkvjX5TxmkeP2xj563pVc3GHuy8FrjeEoOv1951AbLLISxTJQSEEsz8M3W4F3Xl_e5WbmrH7Xd1ibLnSh2vw5EW18-d6JK6iMVqfJmkDlDlnl0Dvld8T8sLKkbWDkKuieSrE8k6AGtjYRT7kPGBmDWmRkVeUnLGXrFCwiocLZUaXBww6kbjYIeWNPn85ZB9TxePnZ6r_J4A2GS-GUYrcHNm8O9YnamF41AcUZqtqga4FHDssK3vqtcI8m3YRVJibj-AnpX-sUtp27cfJCCL6092lg3Y_80C8DZRijYy7lQFpnOsnwLED8i6ATOGOMnLsw1GDGk2hvf086sEQKQi8qnZGvI9YR9QFWmwXEWroSiVcovgEq7u9bknQeDEWTvEnW47C-Tb3bc4bYjqVbzWoWBPRTDSNRNGUFfcYL1htnDmOtz9yihbu0TpqztYMLKAUBilWlrsAWTFYBvGiJodxyVxB2wY6Q8cl93exmXEsACQN6uUfkNsFolUridsksYQaOH29kUXDRBQdV4r9-FGWfBFXJ611p-p1FD1sDIAA",
       "domain": ".login.microsoftonline.com",
       "path": "/",
       "expires": 1795797040.962501,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "Yxrmf2l72UqgV1ueSVJtQX|1795792561285|1795795864536",
+      "domain": "rewards.bing.com",
+      "path": "/",
+      "expires": 1795797664,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "esctx-e8p44cQneQo",
+      "value": "BgABCQEAAAA9VeaV3ywaSLp1O3c4_Et5RXZvU3RzQXJ0aWZhY3RzDQAAAAAAJkK9C_yAg0xnm0O9nVD4I7qe1yjR5IVOBGQFb5n36uHtBx4QBzkhteZLFWxgrW8LCqF63FpghbUbCjNqB9iSkH4obGU7nQnXfqMbyS-f7uCSoN0GHWaINwdusM-ZXdISefhMQQV3nkf8SAnnM0USA9lYl_YnOwpRcm2sf23wrSNGz49yEvP31vy2nfLlAo5ZMGmiZfBz6UrhPOBy-YdfYmf3TEMyPFyiEiIFkKs3HgzYGDMh1R1_solB0qgYNQJ6vibPYh8LidOhbMC5XU7fSY1wbARFD5OwMvocSBnOTA4za1dwrm5_VeW4b6eMCJDLGkr7egbXtLPzWqSZtO_fISoDLQ5y6M1F5ra0TaDM81c7LtaZf_031EltdDcHN921_yTLiSsW_EKQMke7MK-GNoU0Kkfx3x2gCLAWFxbSL5A11DlTGYV6vW0fAe7cC7ht9o5eIU2VxJS2F9AHscDc9eoNlF8xxUsdJOQ5NeF0b09BTYGNPzmJ9JUSnnjQqhBD_Fse_UYwFmycNtwauxoMIbJShentxWgGM0NB5lAQJswIB6env-2qhTDlpkfttUAYx_oBswgpww3NrOk0NuGau0jH0F_hAt7oSdHD8YX5L2wZBRA4gY6EHCbffqk3SeIeOOZ-AI3M_9fAger8ZpYysnu0v-FQC1jl7V8MCIpcfqYRpLN5Vfho7ZgPKkV2y5blIAA",
+      "domain": ".login.microsoftonline.com",
+      "path": "/",
+      "expires": 1795797365.741037,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
